@@ -5,6 +5,7 @@ import re
 import time
 import pprint
 import os
+import pickle
 
 
 def normalize_text(text):
@@ -49,7 +50,7 @@ def write_image_list_to_file(directory):
     images.sort(key=lambda x: int(''.join(filter(str.isdigit, x))))
     with open('images.txt', 'w') as file:
         for image in images:
-            file.write(image + '\n')
+            file.write(r'images//' + image + '\n')
 
 
 def translate_words(units):
@@ -102,17 +103,24 @@ def translate_words(units):
 
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-write_image_list_to_file(r'C:\Users\artur\Desktop\projects\EnglishTraining')
+write_image_list_to_file(r'C:\Users\artur\Desktop\projects\EnglishTraining\images')
 text = pytesseract.image_to_string('images.txt')
-print(text)
-normalized_words = normalize_text(text)
 
+normalized_words = normalize_text(text)
 pprint.pprint(normalized_words)
 
-translated_words = translate_words(normalized_words)
-print(translated_words)
+# translate words
+# translated_words = translate_words(normalized_words)
+# pprint.pprint(translated_words)
 
-for item in translated_words:
-    print(item)
+# # safe translated_words
+# with open('translated_words.pickle', 'wb') as f:
+#     pickle.dump(translated_words, f)
 
-pprint.pprint(translated_words)
+# load translated_words
+with open('data.pickle', 'rb') as f:
+    data = pickle.load(f)
+print(data[1]['basic'])
+
+keys = list(data[1]['basic'].keys())[:10]
+print(keys)
